@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Infraestrutura compartilhada para microsserviços de feedbacks
+
+Resources:
+
+  ## =========================
+  ## DynamoDB - Feedbacks
+  ## =========================
+  FeedbackTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: FeedbackTable
+      PrimaryKey:
+        Name: id
+        Type: String
+      Tags:
+        Project: FeedbackPlatform
+
+  ## =========================
+  ## SQS - Fila de Urgência
+  ## =========================
+  FilaUrgencia:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: FilaUrgencia
+      VisibilityTimeout: 30
+      MessageRetentionPeriod: 345600
+      Tags:
+        - Key: Project
+          Value: FeedbackPlatform
+
+  ## =========================
+  ## SNS - Tópico de Urgência
+  ## =========================
+  UrgencyTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: Urgencia
+      Tags:
+        - Key: Project
+          Value: FeedbackPlatform
+
+Outputs:
+
+  ## -------------------------
+  ## DynamoDB - Export para MS1 e MS3
+  ## -------------------------
+  FeedbackTableName: # Para MS1 e MS3: acessar tabela para read/write
+    Description: Nome da tabela DynamoDB Feedbacks
+    Value: !Ref FeedbackTable
+    Export:
+      Name: FeedbackTableName
+
+  ## -------------------------
+  ## SQS - Export para MS1 e MS2
+  ## -------------------------
+  FilaUrgenciaUrl: # Para publicar mensagens na fila MS1
+    Description: URL da fila de urgência
+    Value: !Ref FilaUrgencia
+    Export:
+      Name: FilaUrgenciaUrl
+
+  FilaUrgenciaArn: # Para configurar o trigger do Lambda no MS2
+    Description: ARN da fila de urgência
+    Value: !GetAtt FilaUrgencia.Arn
+    Export:
+      Name: FilaUrgenciaArn
+
+  ## -------------------------
+  ## SNS - Export para MS2 e MS4
+  ## -------------------------
+  UrgencyTopicArn: # Para MS2 (listar inscritos) e MS4 (adicionar inscritos)
+    Description: ARN do tópico SNS de Urgência
+    Value: !Ref UrgencyTopic
+    Export:
+      Name: UrgencyTopicArn
