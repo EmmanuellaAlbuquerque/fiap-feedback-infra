@@ -30,6 +30,14 @@ Resources:
         - Key: Project
           Value: FeedbackPlatform
 
+  ## =========================
+  ## SNS - Tópico de Urgência
+  ## =========================
+  UrgencyTopic:
+     Type: AWS::SNS::Topic
+     Properties:
+       TopicName: Urgencia
+
 Outputs:
 
   ## -------------------------
@@ -55,3 +63,9 @@ Outputs:
     Value: !GetAtt FilaUrgencia.Arn
     Export:
       Name: FilaUrgenciaArn
+
+  UrgencyTopicArn:
+    Description: "ARN do Tópico SNS de Urgência"
+    Value: !Ref UrgencyTopic
+    Export:
+      Name: UrgencyTopicArn
