@@ -38,6 +38,14 @@ Resources:
      Properties:
        TopicName: Urgencia
 
+  ## =========================
+  ## SNS - Tópico de Relatórios
+  ## =========================
+  ReportTopic:
+     Type: AWS::SNS::Topic
+     Properties:
+       TopicName: Relatorios
+
 Outputs:
 
   ## -------------------------
@@ -52,20 +60,27 @@ Outputs:
   ## -------------------------
   ## SQS - Export para MS1 e MS2
   ## -------------------------
-  FilaUrgenciaUrl: # Para publicar mensagens na fila MS1
-    Description: URL da fila de urgência
-    Value: !Ref FilaUrgencia
-    Export:
-      Name: FilaUrgenciaUrl
-
   FilaUrgenciaArn: # Para configurar o trigger do Lambda no MS2
     Description: ARN da fila de urgência
     Value: !GetAtt FilaUrgencia.Arn
     Export:
       Name: FilaUrgenciaArn
 
+  ## =========================
+  ## SNS - Tópico de Urgência - Export para MS2
+  ## =========================
   UrgencyTopicArn:
     Description: "ARN do Tópico SNS de Urgência"
     Value: !Ref UrgencyTopic
     Export:
       Name: UrgencyTopicArn
+
+  ## =========================
+  ## SNS - Tópico de Relatórios - Export para MS2 e MS3
+  ## =========================
+  ReportTopicArn:
+    Description: "ARN do Tópico SNS de Relatórios"
+    Value: !Ref ReportTopic
+    Export:
+      Name: ReportTopicArn
+
