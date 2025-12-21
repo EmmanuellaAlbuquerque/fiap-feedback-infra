@@ -46,10 +46,29 @@ Resources:
      Properties:
        TopicName: Relatorios
 
+  ## =========================
+  ## SNS - Tópico de Inscritos para receber Relatórios
+  ## =========================
+  ReportSubscriptionTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: InscritosRelatorios
+
+  ## =========================
+  ## S3 - Bucket de Relatórios
+  ## =========================
+  ReportBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: fiap-feedback-report-s3
+      Tags:
+        - Key: Project
+          Value: FeedbackPlatform
+
 Outputs:
 
   ## -------------------------
-  ## DynamoDB - Export para MS1 e MS3
+  ## DynamoDB - Feedbacks - Export
   ## -------------------------
   FeedbackTableName: # Para MS1 e MS3: acessar tabela para read/write
     Description: Nome da tabela DynamoDB Feedbacks
@@ -58,7 +77,7 @@ Outputs:
       Name: FeedbackTableName
 
   ## -------------------------
-  ## SQS - Export para MS1 e MS2
+  ## SQS - Fila de Urgência - Export
   ## -------------------------
   FilaUrgenciaArn: # Para configurar o trigger do Lambda no MS2
     Description: ARN da fila de urgência
@@ -67,7 +86,7 @@ Outputs:
       Name: FilaUrgenciaArn
 
   ## =========================
-  ## SNS - Tópico de Urgência - Export para MS2
+  ## SNS - Tópico de Urgência - Export
   ## =========================
   UrgencyTopicArn:
     Description: "ARN do Tópico SNS de Urgência"
@@ -76,7 +95,7 @@ Outputs:
       Name: UrgencyTopicArn
 
   ## =========================
-  ## SNS - Tópico de Relatórios - Export para MS2 e MS3
+  ## SNS - Tópico de Relatórios - Export
   ## =========================
   ReportTopicArn:
     Description: "ARN do Tópico SNS de Relatórios"
@@ -84,3 +103,20 @@ Outputs:
     Export:
       Name: ReportTopicArn
 
+  ## =========================
+  ## SNS - Tópico de Incritos Relatórios - Export
+  ## =========================
+  ReportSubscriptionTopicArn:
+    Description: "ARN do Tópico SNS de Incritos no Relatórios"
+    Value: !Ref ReportSubscriptionTopic
+    Export:
+      Name: ReportSubscriptionTopicArn
+
+  ## =========================
+  ## S3 - Bucket de Relatórios - Export
+  ## =========================
+  ReportBucketName:
+    Description: "Nome do Bucket S3 de Relatórios"
+    Value: !Ref ReportBucket
+    Export:
+      Name: ReportBucketName
