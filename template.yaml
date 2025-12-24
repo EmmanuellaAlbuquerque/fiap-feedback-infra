@@ -18,6 +18,19 @@ Resources:
         Project: FeedbackPlatform
 
   ## =========================
+  ## DynamoDB - Admins
+  ## =========================
+  AdminTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: AdminTable
+      PrimaryKey:
+        Name: id
+        Type: String
+      Tags:
+        Project: FeedbackPlatform
+
+  ## =========================
   ## SQS - Fila de Urgência
   ## =========================
   FilaUrgencia:
@@ -31,28 +44,12 @@ Resources:
           Value: FeedbackPlatform
 
   ## =========================
-  ## SNS - Tópico de Urgência
-  ## =========================
-  UrgencyTopic:
-     Type: AWS::SNS::Topic
-     Properties:
-       TopicName: Urgencia
-
-  ## =========================
   ## SNS - Tópico de Relatórios
   ## =========================
   ReportTopic:
      Type: AWS::SNS::Topic
      Properties:
        TopicName: Relatorios
-
-  ## =========================
-  ## SNS - Tópico de Inscritos para receber Relatórios
-  ## =========================
-  ReportSubscriptionTopic:
-    Type: AWS::SNS::Topic
-    Properties:
-      TopicName: InscritosRelatorios
 
   ## =========================
   ## S3 - Bucket de Relatórios
@@ -70,29 +67,41 @@ Outputs:
   ## -------------------------
   ## DynamoDB - Feedbacks - Export
   ## -------------------------
-  FeedbackTableName: # Para MS1 e MS3: acessar tabela para read/write
+  FeedbackTableName:
     Description: Nome da tabela DynamoDB Feedbacks
     Value: !Ref FeedbackTable
     Export:
       Name: FeedbackTableName
 
+  FeedbackTableArn:
+    Description: ARN da tabela DynamoDB Feedbacks
+    Value: !GetAtt FeedbackTable.Arn
+    Export:
+      Name: FeedbackTableArn
+
+  ## -------------------------
+  ## DynamoDB - Admins - Export
+  ## -------------------------
+  AdminTableName:
+    Description: Nome da tabela DynamoDB Admins
+    Value: !Ref AdminTable
+    Export:
+      Name: AdminTableName
+
+  AdminTableArn:
+    Description: ARN da tabela DynamoDB Admins
+    Value: !GetAtt AdminTable.Arn
+    Export:
+      Name: AdminTableArn
+
   ## -------------------------
   ## SQS - Fila de Urgência - Export
   ## -------------------------
-  FilaUrgenciaArn: # Para configurar o trigger do Lambda no MS2
+  FilaUrgenciaArn:
     Description: ARN da fila de urgência
     Value: !GetAtt FilaUrgencia.Arn
     Export:
       Name: FilaUrgenciaArn
-
-  ## =========================
-  ## SNS - Tópico de Urgência - Export
-  ## =========================
-  UrgencyTopicArn:
-    Description: "ARN do Tópico SNS de Urgência"
-    Value: !Ref UrgencyTopic
-    Export:
-      Name: UrgencyTopicArn
 
   ## =========================
   ## SNS - Tópico de Relatórios - Export
@@ -102,15 +111,6 @@ Outputs:
     Value: !Ref ReportTopic
     Export:
       Name: ReportTopicArn
-
-  ## =========================
-  ## SNS - Tópico de Incritos Relatórios - Export
-  ## =========================
-  ReportSubscriptionTopicArn:
-    Description: "ARN do Tópico SNS de Incritos no Relatórios"
-    Value: !Ref ReportSubscriptionTopic
-    Export:
-      Name: ReportSubscriptionTopicArn
 
   ## =========================
   ## S3 - Bucket de Relatórios - Export
