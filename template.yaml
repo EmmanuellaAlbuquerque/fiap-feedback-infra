@@ -57,7 +57,7 @@ Resources:
   ReportBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: fiap-feedback-report-s3-manu
+      BucketName: fiap-feedback-report-s3
       Tags:
         - Key: Project
           Value: FeedbackPlatform
