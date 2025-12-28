@@ -23,7 +23,7 @@ sam deploy --stack-name fiap-feedback-infra --region us-east-1
 
 **3. Deletar template**
 ```
-sam delete --stack-name fiap-feedback-infra
+sam delete --stack-name fiap-feedback-infra --region us-east-1
 ```
 > **Importante:** O comando `deploy` fará o provisionamento ou atualização dos recursos na AWS de acordo com o `template.yaml`.
 
